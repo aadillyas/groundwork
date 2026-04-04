@@ -26,7 +26,7 @@ function readState(): StoredState {
   }
 }
 
-function writeState(state: UsageState): void {
+function writeState(state: StoredState): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
 }
 
