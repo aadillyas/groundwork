@@ -13,6 +13,8 @@ export default function AccessGate({ onUnlocked, onClose }: AccessGateProps) {
   const [githubToken, setGithubToken] = useState('')
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
+  const [notifyEmail, setNotifyEmail] = useState('')
+  const [notifySent, setNotifySent] = useState(false)
 
   function handleSave() {
     if (!geminiKey.trim()) { setError('Gemini API key is required'); return }
@@ -104,23 +106,48 @@ export default function AccessGate({ onUnlocked, onClose }: AccessGateProps) {
             <div className="flex-1 h-px bg-zinc-100 dark:bg-zinc-800" />
           </div>
 
-          {/* Paid option */}
-          <div className="border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 flex items-center justify-between gap-4 bg-indigo-50/50 dark:bg-indigo-950/20">
-            <div>
-              <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Subscribe</div>
-              <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-                Unlimited analyses, our API keys, no setup.
+          {/* Pro option — coming soon */}
+          <div className="border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 flex flex-col gap-3 bg-indigo-50/50 dark:bg-indigo-950/20">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <div className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Pro — coming soon</div>
+                <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  Unlimited analyses, our API keys, no setup. $3/mo.
+                </div>
               </div>
-              <div className="text-xs font-mono text-indigo-600 dark:text-indigo-400 mt-1">
-                $3 / month &nbsp;&middot;&nbsp; LKR 1,000 / month
-              </div>
+              <span className="flex-none text-xs font-mono px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+                Soon
+              </span>
             </div>
-            <button
-              className="flex-none px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors whitespace-nowrap"
-              onClick={() => {/* Lemon Squeezy checkout URL goes here in Sprint 5 */}}
-            >
-              Get started &rarr;
-            </button>
+            {notifySent ? (
+              <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="7" r="6" stroke="currentColor" strokeWidth="1.2"/>
+                  <path d="M4.5 7L6 8.5L9.5 5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Got it — I&rsquo;ll reach out when it&rsquo;s ready.
+              </div>
+            ) : (
+              <form
+                onSubmit={e => { e.preventDefault(); setNotifySent(true) }}
+                className="flex gap-2"
+              >
+                <input
+                  type="email"
+                  required
+                  placeholder="your@email.com"
+                  value={notifyEmail}
+                  onChange={e => setNotifyEmail(e.target.value)}
+                  className="flex-1 min-w-0 text-xs px-3 py-2 rounded-lg border border-indigo-200 dark:border-indigo-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                />
+                <button
+                  type="submit"
+                  className="flex-none px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-colors"
+                >
+                  Notify me
+                </button>
+              </form>
+            )}
           </div>
 
         </div>

@@ -1,10 +1,28 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import IdeaInput from '@/components/IdeaInput'
 import ProgressTracker from '@/components/ProgressTracker'
 import { AnalysisPhase } from '@/lib/types'
 import { DEMO_IDEA } from '@/lib/demo'
+import { getTotalAnalysisCount } from '@/lib/access'
+
+function AnalysisCounter() {
+  const [count, setCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    setCount(getTotalAnalysisCount())
+  }, [])
+
+  if (count === null || count < 1) return null
+
+  return (
+    <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-600 font-mono reveal">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+      {count.toLocaleString()} {count === 1 ? 'analysis' : 'analyses'} completed
+    </div>
+  )
+}
 
 interface HeroSectionProps {
   onSubmit: (idea: string) => void
@@ -144,17 +162,14 @@ export default function HeroSection({ onSubmit, onDemo, busy, phase, demoTyping,
 
           {!busy && (
             <p className="text-xs text-zinc-400 dark:text-zinc-600 font-mono">
-              Uses GitHub search + Gemini 2.5 Flash &middot; 1 free analysis &middot; No account required
+              Uses GitHub search + Gemini 2.5 Flash &middot; 1 free analysis per day
             </p>
           )}
         </div>
       )}
 
-      {/* Social proof strip */}
-      <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-600 font-mono reveal">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-        Scans thousands of GitHub repos &middot; Results in under 30 seconds &middot; No account required
-      </div>
+      {/* Usage counter */}
+      <AnalysisCounter />
 
     </section>
   )

@@ -1,6 +1,7 @@
 import { AccessTier, UsageState } from '@/lib/types'
 
 const STORAGE_KEY = 'gw_usage'
+const TOTAL_COUNT_KEY = 'gw_total_analyses'
 const FREE_ANALYSES_ALLOWED = 1
 const DAILY_RESET_MS = 24 * 60 * 60 * 1000
 
@@ -44,6 +45,14 @@ export function canRunAnalysis(): boolean {
 export function recordAnalysis(): void {
   const state = readState()
   writeState({ ...state, analysesUsed: state.analysesUsed + 1, lastAnalysisAt: Date.now() })
+  // Increment global total counter
+  const prev = parseInt(localStorage.getItem(TOTAL_COUNT_KEY) ?? '0', 10)
+  localStorage.setItem(TOTAL_COUNT_KEY, String(prev + 1))
+}
+
+export function getTotalAnalysisCount(): number {
+  if (typeof window === 'undefined') return 0
+  return parseInt(localStorage.getItem(TOTAL_COUNT_KEY) ?? '0', 10)
 }
 
 export function saveBYOKKeys(geminiKey: string, githubToken: string): void {
