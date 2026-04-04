@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "eval:fixtures": "node scripts/evaluate-fixtures.mjs"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",

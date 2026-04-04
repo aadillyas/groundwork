@@ -118,7 +118,24 @@ export default function HomePage() {
         const synthesiseRes = await fetch('/api/synthesise', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idea, results: stubResults, scoutRepos: scout.repos, scoutVerdict: scout.verdict, apiKey, provider, model }),
+          body: JSON.stringify({
+            idea,
+            normalizedIdea: scout.normalizedIdea,
+            components: state.decompose.components,
+            results: stubResults,
+            retrievalEvidence: [{
+              component: idea,
+              topRepos: scout.repos.slice(0, 5),
+              queries: scout.queryFamilies ?? [],
+              coverageScore: scout.wholeProductCoverage?.bestScore ?? 0,
+              confidence: scout.confidence?.overall ?? 0.5,
+            }],
+            scoutRepos: scout.repos,
+            scoutVerdict: scout.verdict,
+            apiKey,
+            provider,
+            model,
+          }),
         })
         if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
         state.synthesise = await synthesiseRes.json()
@@ -135,7 +152,7 @@ export default function HomePage() {
       const decomposeRes = await fetch('/api/decompose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, scoutVerdict: scout.verdict, apiKey, provider, model }),
+        body: JSON.stringify({ idea, normalizedIdea: scout.normalizedIdea, scoutVerdict: scout.verdict, apiKey, provider, model }),
       })
       if (!decomposeRes.ok) throw new Error('Failed to decompose idea')
       const decompose = await decomposeRes.json()
@@ -157,7 +174,18 @@ export default function HomePage() {
       const synthesiseRes = await fetch('/api/synthesise', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, results: search.results, scoutRepos: scout.repos, scoutVerdict: scout.verdict, apiKey, provider, model }),
+        body: JSON.stringify({
+          idea,
+          normalizedIdea: decompose.normalizedIdea ?? scout.normalizedIdea,
+          components: decompose.components,
+          results: search.results,
+          retrievalEvidence: search.evidence,
+          scoutRepos: scout.repos,
+          scoutVerdict: scout.verdict,
+          apiKey,
+          provider,
+          model,
+        }),
       })
       if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
       const synthesise = await synthesiseRes.json()

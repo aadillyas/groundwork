@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import siteConfig from '@/site.config'
 const ABOUT = siteConfig.author
 
@@ -14,9 +15,11 @@ export default function AboutSection() {
 
             {/* Avatar */}
             {ABOUT.avatar ? (
-              <img
+              <Image
                 src={ABOUT.avatar}
                 alt={ABOUT.name}
+                width={64}
+                height={64}
                 className="flex-none w-16 h-16 rounded-full object-cover shadow-lg"
               />
             ) : (

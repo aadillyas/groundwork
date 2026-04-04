@@ -1,7 +1,7 @@
-import { Repo, ComponentAction } from '@/lib/types'
+import { RepoEvidence, ComponentAction } from '@/lib/types'
 
 interface RepoCardProps {
-  repo: Repo
+  repo: RepoEvidence
   recommended?: boolean
   actionColour?: ComponentAction
 }
@@ -27,6 +27,7 @@ const LEFT_BORDER: Record<string, string> = {
 export default function RepoCard({ repo, recommended, actionColour }: RepoCardProps) {
   const { color: dotColor, label: dateLabel } = recencyDot(repo.lastCommit)
   const leftBorder = actionColour ? LEFT_BORDER[actionColour] : LEFT_BORDER.default
+  const evidenceScore = repo.evidenceScore ? Math.round(repo.evidenceScore) : null
 
   return (
     <a
@@ -54,6 +55,11 @@ export default function RepoCard({ repo, recommended, actionColour }: RepoCardPr
 
       {/* Stars — prominent */}
       <div className="flex items-center gap-3 mb-2.5 flex-wrap">
+        {evidenceScore !== null && (
+          <span className="text-xs font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-full px-2 py-0.5">
+            Evidence {evidenceScore}
+          </span>
+        )}
         <span className="flex items-center gap-1 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" className="text-amber-400">
             <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
@@ -77,6 +83,19 @@ export default function RepoCard({ repo, recommended, actionColour }: RepoCardPr
 
       {repo.description && (
         <p className="text-sm text-zinc-500 dark:text-zinc-500 leading-relaxed line-clamp-2">{repo.description}</p>
+      )}
+
+      {repo.rankingReasons && repo.rankingReasons.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {repo.rankingReasons.slice(0, 3).map((reason: string) => (
+            <span
+              key={reason}
+              className="text-[11px] text-zinc-500 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 rounded-full px-2 py-1"
+            >
+              {reason}
+            </span>
+          ))}
+        </div>
       )}
     </a>
   )

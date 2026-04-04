@@ -112,6 +112,12 @@ export default function AnalysePage() {
 
   const { idea, decompose, search, synthesise } = state
   const recommendedSet = new Set(synthesise.strategy.repos)
+  const warnings = [
+    ...(state.scout?.warnings ?? []),
+    ...(decompose.warnings ?? []),
+    ...(search.warnings ?? []),
+    ...(synthesise.warnings ?? []),
+  ]
 
   const strategyByComponent: Record<string, ComponentStrategy> = {}
   for (const cs of synthesise.componentStrategies ?? []) {
@@ -312,12 +318,31 @@ export default function AnalysePage() {
 
           {/* Animated score rings */}
           {synthesise.scores && (
-            <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-8 py-10 shadow-sm dark:shadow-none flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-12 animate-fade-slide-in">
+          <div className="w-full bg-white dark:bg-zinc-900 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-8 py-10 shadow-sm dark:shadow-none flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-12 animate-fade-slide-in">
               <ScoreBar title="Originality" entry={synthesise.scores.originality} size="lg" animated revealed={scoresRevealed} revealDelay={0} />
               <div className="w-px sm:self-stretch h-px sm:h-auto w-full sm:w-px bg-zinc-100 dark:bg-zinc-800" />
               <ScoreBar title="Reliance on OSS" entry={synthesise.scores.reliance} size="lg" animated revealed={scoresRevealed} revealDelay={350} />
               <div className="w-px sm:self-stretch h-px sm:h-auto w-full sm:w-px bg-zinc-100 dark:bg-zinc-800" />
               <ScoreBar title="Buildability" entry={synthesise.scores.buildability} size="lg" animated revealed={scoresRevealed} revealDelay={700} />
+            </div>
+          )}
+
+          {synthesise.confidence && (
+            <div className="w-full bg-zinc-50 dark:bg-zinc-950/60 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-6 py-5 animate-fade-slide-in">
+              <p className="font-mono text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-3">Confidence</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  ['Overall', synthesise.confidence.overall],
+                  ['Retrieval', synthesise.confidence.retrieval],
+                  ['Coverage', synthesise.confidence.coverage],
+                  ['Judgment', synthesise.confidence.judgment],
+                ].map(([label, value]) => (
+                  <div key={label as string} className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-4 py-3">
+                    <p className="text-[11px] font-mono uppercase tracking-wide text-zinc-400 dark:text-zinc-600">{label as string}</p>
+                    <p className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">{Math.round(Number(value) * 100)}%</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -346,6 +371,17 @@ export default function AnalysePage() {
                     <CheckIcon />
                     <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">{point.trim()}</p>
                   </div>
+                ))}
+              </div>
+            )}
+
+            {warnings.length > 0 && (
+              <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 flex flex-col gap-2">
+                <p className="font-mono text-xs uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-1">Watchouts</p>
+                {warnings.slice(0, 4).map(warning => (
+                  <p key={`${warning.code}-${warning.message}`} className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    {warning.message}
+                  </p>
                 ))}
               </div>
             )}

@@ -1,9 +1,9 @@
-import { Component, Repo, ComponentStrategy } from '@/lib/types'
+import { Component, RepoEvidence, ComponentStrategy } from '@/lib/types'
 import RepoCard from './RepoCard'
 
 interface ComponentDetailProps {
   component: Component
-  repos: Repo[]
+  repos: RepoEvidence[]
   recommendedRepos: Set<string>
   strategy?: ComponentStrategy
 }
@@ -32,7 +32,7 @@ export default function ComponentDetail({ component, repos, recommendedRepos, st
     const aRec = recommendedRepos.has(a.fullName) ? 1 : 0
     const bRec = recommendedRepos.has(b.fullName) ? 1 : 0
     if (bRec !== aRec) return bRec - aRec
-    return b.stars - a.stars
+    return (b.evidenceScore ?? b.stars) - (a.evidenceScore ?? a.stars)
   })
 
   const isUse = strategy?.action === 'use'

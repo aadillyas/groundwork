@@ -1,0 +1,74 @@
+[
+  {
+    "idea": "a self-hosted kanban project management web app for small teams",
+    "bucket": "fully-solved product",
+    "expectedVerdictBand": ["exists", "partial"],
+    "knownRepos": ["plankanban/planka", "vikunja/vikunja"],
+    "expectedScoreRanges": {
+      "originality": [0, 45],
+      "reliance": [55, 100],
+      "buildability": [45, 85]
+    },
+    "capabilities": ["boards", "tasks", "collaboration"]
+  },
+  {
+    "idea": "a CLI tool to sync Notion pages to markdown files in a git repo",
+    "bucket": "simple tool",
+    "expectedVerdictBand": ["partial", "gap"],
+    "knownRepos": ["jheddings/notion-to-md"],
+    "expectedScoreRanges": {
+      "originality": [40, 80],
+      "reliance": [40, 90],
+      "buildability": [50, 90]
+    },
+    "capabilities": ["notion export", "markdown sync", "cli"]
+  },
+  {
+    "idea": "a slack bot that summarises unread threads and highlights decisions",
+    "bucket": "multi-component workflow",
+    "expectedVerdictBand": ["partial", "gap"],
+    "knownRepos": [],
+    "expectedScoreRanges": {
+      "originality": [50, 90],
+      "reliance": [30, 80],
+      "buildability": [35, 80]
+    },
+    "capabilities": ["slack integration", "thread summarisation", "decision extraction"]
+  },
+  {
+    "idea": "a tool that monitors competitor pricing pages and alerts you when they change",
+    "bucket": "partially solved product",
+    "expectedVerdictBand": ["partial", "gap"],
+    "knownRepos": ["changedetection/changedetection.io"],
+    "expectedScoreRanges": {
+      "originality": [35, 75],
+      "reliance": [45, 90],
+      "buildability": [40, 85]
+    },
+    "capabilities": ["web monitoring", "diff detection", "alerts"]
+  },
+  {
+    "idea": "an internal developer portal that maps services, ownership, and runbooks for engineering teams",
+    "bucket": "infrastructure-heavy product",
+    "expectedVerdictBand": ["exists", "partial"],
+    "knownRepos": ["backstage/backstage"],
+    "expectedScoreRanges": {
+      "originality": [10, 55],
+      "reliance": [60, 100],
+      "buildability": [45, 85]
+    },
+    "capabilities": ["service catalog", "ownership", "documentation"]
+  },
+  {
+    "idea": "a tool that turns voice memos into structured product requirement docs",
+    "bucket": "clear gap",
+    "expectedVerdictBand": ["partial", "gap"],
+    "knownRepos": [],
+    "expectedScoreRanges": {
+      "originality": [55, 95],
+      "reliance": [35, 85],
+      "buildability": [45, 80]
+    },
+    "capabilities": ["speech to text", "structure extraction", "document generation"]
+  }
+]
