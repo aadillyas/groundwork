@@ -16,6 +16,7 @@ import { canRunAnalysis, recordAnalysis, getBYOKKeys, getUsageState } from '@/li
 import siteConfig from '@/site.config'
 
 const DEMO_PHASE_DELAYS: { phase: AnalysisPhase; ms: number }[] = [
+  { phase: 'scouting', ms: 2000 },
   { phase: 'decomposing', ms: 2500 },
   { phase: 'searching', ms: 4000 },
   { phase: 'synthesising', ms: 3000 },
@@ -95,16 +96,52 @@ export default function HomePage() {
     const { geminiKey, githubToken } = getBYOKKeys()
 
     try {
+      // Step 1: Scout — search for a complete existing solution first
+      setPhase('scouting')
+      const scoutRes = await fetch('/api/scout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea, geminiKey, githubToken }),
+      })
+      if (!scoutRes.ok) throw new Error('Failed to scout for existing solutions')
+      const scout = await scoutRes.json()
+      state.scout = scout
+
+      // If a complete solution exists, skip decompose+search and go straight to synthesise
+      // with a stub component result so the results page renders correctly
+      if (scout.verdict === 'exists') {
+        const stubResults = [{ component: idea, repos: scout.repos.slice(0, 5) }]
+        state.decompose = { components: [{ name: idea, description: 'Complete solution found — no decomposition needed.', searchQueries: [] }] }
+        state.search = { results: stubResults }
+
+        setPhase('synthesising')
+        const synthesiseRes = await fetch('/api/synthesise', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ idea, results: stubResults, scoutRepos: scout.repos, scoutVerdict: scout.verdict, geminiKey }),
+        })
+        if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
+        state.synthesise = await synthesiseRes.json()
+
+        state.phase = 'complete'
+        recordAnalysis()
+        sessionStorage.setItem('groundwork_result', JSON.stringify(state))
+        router.push('/analyse')
+        return
+      }
+
+      // Step 2: Decompose — LLM judges complexity given scout context
       setPhase('decomposing')
       const decomposeRes = await fetch('/api/decompose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, geminiKey }),
+        body: JSON.stringify({ idea, scoutVerdict: scout.verdict, geminiKey }),
       })
       if (!decomposeRes.ok) throw new Error('Failed to decompose idea')
       const decompose = await decomposeRes.json()
       state.decompose = decompose
 
+      // Step 3: Search per component
       setPhase('searching')
       const searchRes = await fetch('/api/search', {
         method: 'POST',
@@ -115,11 +152,12 @@ export default function HomePage() {
       const search = await searchRes.json()
       state.search = search
 
+      // Step 4: Synthesise with both scout + component results
       setPhase('synthesising')
       const synthesiseRes = await fetch('/api/synthesise', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, results: search.results, geminiKey }),
+        body: JSON.stringify({ idea, results: search.results, scoutRepos: scout.repos, scoutVerdict: scout.verdict, geminiKey }),
       })
       if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
       const synthesise = await synthesiseRes.json()

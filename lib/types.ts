@@ -1,15 +1,3 @@
-// ─── Decompose ────────────────────────────────────────────────────────────────
-
-export interface Component {
-  name: string
-  description: string
-  searchQueries: string[]
-}
-
-export interface DecomposeResponse {
-  components: Component[]
-}
-
 // ─── Search ───────────────────────────────────────────────────────────────────
 
 export interface Repo {
@@ -31,30 +19,6 @@ export interface ComponentResult {
 
 export interface SearchResponse {
   results: ComponentResult[]
-}
-
-// ─── Scores ───────────────────────────────────────────────────────────────────
-
-export interface ScoreEntry {
-  score: number   // 0–100
-  label: string   // e.g. "Novel", "Mostly OSS", "Ship in weeks"
-}
-
-export interface ProjectScores {
-  originality: ScoreEntry
-  reliance: ScoreEntry
-  buildability: ScoreEntry
-}
-
-// ─── Access ───────────────────────────────────────────────────────────────────
-
-export type AccessTier = 'free' | 'byok' | 'paid'
-
-export interface UsageState {
-  analysesUsed: number
-  tier: AccessTier
-  geminiKey?: string
-  githubToken?: string
 }
 
 // ─── Synthesise ───────────────────────────────────────────────────────────────
@@ -88,10 +52,56 @@ export interface SynthesiseResponse {
   exportMarkdown: string
 }
 
+// ─── Scout ────────────────────────────────────────────────────────────────────
+
+export interface ScoutResponse {
+  queries: string[]           // whole-product queries used
+  repos: Repo[]               // top results across all queries
+  verdict: ExistenceVerdict   // 'exists' | 'partial' | 'gap'
+  summary: string             // 1-2 sentence reasoning
+}
+
+// ─── Decompose ────────────────────────────────────────────────────────────────
+
+export interface Component {
+  name: string
+  description: string
+  searchQueries: string[]
+}
+
+export interface DecomposeResponse {
+  components: Component[]
+}
+
+// ─── Scores ───────────────────────────────────────────────────────────────────
+
+export interface ScoreEntry {
+  score: number   // 0–100
+  label: string   // e.g. "Novel", "Mostly OSS", "Ship in weeks"
+}
+
+export interface ProjectScores {
+  originality: ScoreEntry
+  reliance: ScoreEntry
+  buildability: ScoreEntry
+}
+
+// ─── Access ───────────────────────────────────────────────────────────────────
+
+export type AccessTier = 'free' | 'byok' | 'paid'
+
+export interface UsageState {
+  analysesUsed: number
+  tier: AccessTier
+  geminiKey?: string
+  githubToken?: string
+}
+
 // ─── UI State ─────────────────────────────────────────────────────────────────
 
 export type AnalysisPhase =
   | 'idle'
+  | 'scouting'
   | 'decomposing'
   | 'searching'
   | 'synthesising'
@@ -101,6 +111,7 @@ export type AnalysisPhase =
 export interface AnalysisState {
   phase: AnalysisPhase
   idea: string
+  scout?: ScoutResponse
   decompose?: DecomposeResponse
   search?: SearchResponse
   synthesise?: SynthesiseResponse

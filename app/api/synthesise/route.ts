@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { callLLM } from '@/lib/llm'
-import { ComponentResult, SynthesiseResponse } from '@/lib/types'
+import { ComponentResult, Repo, SynthesiseResponse } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
-  const { idea, results, geminiKey }: { idea: string; results: ComponentResult[]; geminiKey?: string } = await req.json()
+  const {
+    idea,
+    results,
+    scoutRepos,
+    scoutVerdict,
+    geminiKey,
+  }: {
+    idea: string
+    results: ComponentResult[]
+    scoutRepos?: Repo[]
+    scoutVerdict?: string
+    geminiKey?: string
+  } = await req.json()
 
   const componentNames = results.map(r => r.component)
 
@@ -16,14 +28,20 @@ export async function POST(req: NextRequest) {
     })
     .join('\n\n')
 
+  const scoutSection = scoutRepos && scoutRepos.length > 0
+    ? `\nComplete-product search results (repos that may already do the whole job):\n${scoutRepos.map(r => `  - ${r.fullName} (${r.stars.toLocaleString()} stars, last commit ${r.lastCommit.slice(0, 10)}) — ${r.description}`).join('\n')}\nInitial scout verdict: ${scoutVerdict ?? 'unknown'}\n`
+    : ''
+
   const prompt = `You are an expert technical advisor helping a founder decide whether to build, fork, or combine existing OSS for their idea.
 
 Idea: "${idea}"
-
+${scoutSection}
 GitHub search results by component:
 ${repoSummary}
 
 Produce an opinionated analysis. Be direct. Tell the founder exactly what to do.
+
+If a complete product already exists in the scout results, the existenceCheck verdict must be "exists" and the strategy should be "fork-one" pointing at that repo — do not recommend rebuilding what already exists.
 
 For each component, decide:
 - "use": a strong OSS library exists (well-maintained, >500 stars, active commits). Tell them which one and why.
@@ -33,7 +51,7 @@ Respond in pure JSON with no markdown fences. Format:
 {
   "existenceCheck": {
     "verdict": "exists" | "partial" | "gap",
-    "summary": "2-3 sentences max. Does this idea already exist as a complete solution?"
+    "summary": "2-3 sentences max. Does this idea already exist as a complete solution? Name the specific repo if so."
   },
   "gapAnalysis": "3-5 sentences. What is genuinely missing? Be specific.",
   "strategy": {

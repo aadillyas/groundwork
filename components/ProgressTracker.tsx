@@ -3,12 +3,13 @@
 import { AnalysisPhase } from '@/lib/types'
 
 const PHASES: { phase: AnalysisPhase; label: string; detail: string }[] = [
+  { phase: 'scouting', label: 'Scouting', detail: 'Searching for existing solutions' },
   { phase: 'decomposing', label: 'Decomposing', detail: 'Breaking your idea into components' },
   { phase: 'searching', label: 'Searching GitHub', detail: 'Finding relevant OSS repos' },
   { phase: 'synthesising', label: 'Synthesising', detail: 'Building your recommendation' },
 ]
 
-const PHASE_ORDER: AnalysisPhase[] = ['decomposing', 'searching', 'synthesising', 'complete']
+const PHASE_ORDER: AnalysisPhase[] = ['scouting', 'decomposing', 'searching', 'synthesising', 'complete']
 
 interface ProgressTrackerProps {
   phase: AnalysisPhase
@@ -18,7 +19,7 @@ export default function ProgressTracker({ phase }: ProgressTrackerProps) {
   const currentIndex = PHASE_ORDER.indexOf(phase)
 
   return (
-    <div className="flex items-start gap-0 w-full max-w-lg">
+    <div className="flex items-start gap-0 w-full max-w-xl">
       {PHASES.map(({ phase: p, label, detail }, i) => {
         const isDone = currentIndex > i + 1 || phase === 'complete'
         const isActive = PHASE_ORDER[currentIndex] === p
