@@ -5,7 +5,7 @@ import { Repo, ScoutResponse, ExistenceVerdict } from '@/lib/types'
 const GITHUB_API = 'https://api.github.com/search/repositories'
 
 async function searchRepos(query: string, githubToken?: string): Promise<Repo[]> {
-  const url = `${GITHUB_API}?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=10`
+  const url = `${GITHUB_API}?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=30`
   const token = githubToken ?? process.env.GITHUB_TOKEN
   const res = await fetch(url, {
     headers: {
@@ -34,12 +34,25 @@ export async function POST(req: NextRequest) {
   // Step 1: generate whole-product search queries
   const queryPrompt = `You are a senior engineer doing pre-build research. A founder wants to build: "${idea}"
 
-Generate 3 GitHub search queries that would find a complete, ready-to-use open source project that already does exactly this — not libraries or components, but the finished product itself.
+Generate 5 GitHub search queries that would find a complete, ready-to-use open source project that already does exactly this — not libraries or components, but the finished product itself.
 
-Think: what would someone search for if they wanted to find and fork an existing tool rather than build from scratch?
+Use GitHub's search syntax to maximise precision:
+- "in:name" to match repo names (e.g. "reminders menubar in:name")
+- "in:description" to match descriptions
+- "topic:" to match repository topics (e.g. "topic:macos topic:menubar")
+- Combine terms that describe the finished product, not the tech stack
+
+Example — for "a macOS menu bar app for reminders":
+- "reminders menubar in:name,description"
+- "topic:macos topic:reminders menubar"
+- "macos menu bar reminders app in:name"
+- "reminders-menubar"
+- "topic:menubar reminders macos"
+
+Think: what name would the author give this repo? What topics would they tag it with?
 
 Respond in pure JSON with no markdown fences:
-{ "queries": ["query one", "query two", "query three"] }`
+{ "queries": ["query one", "query two", "query three", "query four", "query five"] }`
 
   let queries: string[] = []
   try {
@@ -61,13 +74,13 @@ Respond in pure JSON with no markdown fences:
       }
     }
   }
-  const top8 = Array.from(byFullName.values())
+  const top15 = Array.from(byFullName.values())
     .sort((a, b) => b.stars - a.stars)
-    .slice(0, 8)
+    .slice(0, 15)
 
   // Step 3: LLM judges whether a complete solution exists
-  const repoList = top8.length > 0
-    ? top8.map(r => `- ${r.fullName} (${r.stars.toLocaleString()} stars, last commit ${r.lastCommit.slice(0, 10)}) — ${r.description}`).join('\n')
+  const repoList = top15.length > 0
+    ? top15.map(r => `- ${r.fullName} (${r.stars.toLocaleString()} stars, last commit ${r.lastCommit.slice(0, 10)}) — ${r.description}`).join('\n')
     : '(no results found)'
 
   const verdictPrompt = `A founder wants to build: "${idea}"
@@ -75,9 +88,11 @@ Respond in pure JSON with no markdown fences:
 These are the top GitHub results when searching for a complete, existing solution:
 ${repoList}
 
-Does a complete, production-ready open source solution already exist for this exact idea?
+Does a complete open source solution already exist for this exact idea?
 
-Be strict: "exists" only if one of these repos clearly does the full job with active maintenance (commits in last 12 months) and meaningful adoption (>200 stars). "partial" if something covers 60-80% of the idea. "gap" if nothing closely matches.
+- "exists": one of these repos clearly does the full job. Star count does not matter — a 50-star repo that perfectly matches is still "exists". Focus on whether the repo's name/description matches the idea, not on popularity.
+- "partial": something covers the core use case but is missing a meaningful feature or is clearly abandoned (no commits in 2+ years).
+- "gap": nothing closely matches the idea.
 
 Respond in pure JSON with no markdown fences:
 {
@@ -90,7 +105,7 @@ Respond in pure JSON with no markdown fences:
     const parsed = JSON.parse(raw)
     const response: ScoutResponse = {
       queries,
-      repos: top8,
+      repos: top15,
       verdict: parsed.verdict as ExistenceVerdict,
       summary: parsed.summary,
     }
