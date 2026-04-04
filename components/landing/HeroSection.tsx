@@ -1,25 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import IdeaInput from '@/components/IdeaInput'
 import ProgressTracker from '@/components/ProgressTracker'
 import { AnalysisPhase } from '@/lib/types'
 import { DEMO_IDEA } from '@/lib/demo'
-import { getTotalAnalysisCount } from '@/lib/access'
 
 function AnalysisCounter() {
-  const [count, setCount] = useState<number | null>(null)
-
-  useEffect(() => {
-    setCount(getTotalAnalysisCount())
-  }, [])
-
-  if (count === null || count < 1) return null
-
   return (
     <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-600 font-mono reveal">
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-      {count.toLocaleString()} {count === 1 ? 'analysis' : 'analyses'} completed
+      Join 50+ builders who&rsquo;ve already done their groundwork
     </div>
   )
 }
