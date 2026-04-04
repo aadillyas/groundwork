@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { callLLM } from '@/lib/llm'
-import { Repo, ScoutResponse, ExistenceVerdict } from '@/lib/types'
+import { Repo, ScoutResponse, ExistenceVerdict, LLMProvider } from '@/lib/types'
 
 const GITHUB_API = 'https://api.github.com/search/repositories'
 
@@ -29,7 +29,19 @@ async function searchRepos(query: string, githubToken?: string): Promise<Repo[]>
 }
 
 export async function POST(req: NextRequest) {
-  const { idea, geminiKey, githubToken }: { idea: string; geminiKey?: string; githubToken?: string } = await req.json()
+  const {
+    idea,
+    apiKey,
+    provider,
+    model,
+    githubToken,
+  }: {
+    idea: string
+    apiKey?: string
+    provider?: LLMProvider
+    model?: string
+    githubToken?: string
+  } = await req.json()
 
   // Step 1: generate whole-product search queries
   const queryPrompt = `You are a senior engineer doing pre-build research. A founder wants to build: "${idea}"
@@ -56,7 +68,7 @@ Respond in pure JSON with no markdown fences:
 
   let queries: string[] = []
   try {
-    const raw = await callLLM(queryPrompt, geminiKey)
+    const raw = await callLLM(queryPrompt, apiKey, provider, model)
     const parsed = JSON.parse(raw)
     queries = parsed.queries ?? []
   } catch {
@@ -101,7 +113,7 @@ Respond in pure JSON with no markdown fences:
 }`
 
   try {
-    const raw = await callLLM(verdictPrompt, geminiKey)
+    const raw = await callLLM(verdictPrompt, apiKey, provider, model)
     const parsed = JSON.parse(raw)
     const response: ScoutResponse = {
       queries,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { callLLM } from '@/lib/llm'
-import { ComponentResult, Repo, SynthesiseResponse } from '@/lib/types'
+import { ComponentResult, Repo, SynthesiseResponse, LLMProvider } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
   const {
@@ -8,13 +8,17 @@ export async function POST(req: NextRequest) {
     results,
     scoutRepos,
     scoutVerdict,
-    geminiKey,
+    apiKey,
+    provider,
+    model,
   }: {
     idea: string
     results: ComponentResult[]
     scoutRepos?: Repo[]
     scoutVerdict?: string
-    geminiKey?: string
+    apiKey?: string
+    provider?: LLMProvider
+    model?: string
   } = await req.json()
 
   const componentNames = results.map(r => r.component)
@@ -94,7 +98,7 @@ For the scores, reason as follows before producing the numbers:
 Produce integer scores only. Use the label that matches the score range exactly.`
 
   try {
-    const raw = await callLLM(prompt, geminiKey)
+    const raw = await callLLM(prompt, apiKey, provider, model)
     const parsed: SynthesiseResponse = JSON.parse(raw)
     return NextResponse.json(parsed)
   } catch (err) {

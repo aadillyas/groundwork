@@ -93,7 +93,7 @@ export default function HomePage() {
 
     setError(null)
     const state: AnalysisState = { phase: 'idle', idea }
-    const { geminiKey, githubToken } = getBYOKKeys()
+    const { apiKey, provider, model, githubToken } = getBYOKKeys()
 
     try {
       // Step 1: Scout — search for a complete existing solution first
@@ -101,7 +101,7 @@ export default function HomePage() {
       const scoutRes = await fetch('/api/scout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, geminiKey, githubToken }),
+        body: JSON.stringify({ idea, apiKey, provider, model, githubToken }),
       })
       if (!scoutRes.ok) throw new Error('Failed to scout for existing solutions')
       const scout = await scoutRes.json()
@@ -118,7 +118,7 @@ export default function HomePage() {
         const synthesiseRes = await fetch('/api/synthesise', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idea, results: stubResults, scoutRepos: scout.repos, scoutVerdict: scout.verdict, geminiKey }),
+          body: JSON.stringify({ idea, results: stubResults, scoutRepos: scout.repos, scoutVerdict: scout.verdict, apiKey, provider, model }),
         })
         if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
         state.synthesise = await synthesiseRes.json()
@@ -135,7 +135,7 @@ export default function HomePage() {
       const decomposeRes = await fetch('/api/decompose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, scoutVerdict: scout.verdict, geminiKey }),
+        body: JSON.stringify({ idea, scoutVerdict: scout.verdict, apiKey, provider, model }),
       })
       if (!decomposeRes.ok) throw new Error('Failed to decompose idea')
       const decompose = await decomposeRes.json()
@@ -157,7 +157,7 @@ export default function HomePage() {
       const synthesiseRes = await fetch('/api/synthesise', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea, results: search.results, scoutRepos: scout.repos, scoutVerdict: scout.verdict, geminiKey }),
+        body: JSON.stringify({ idea, results: search.results, scoutRepos: scout.repos, scoutVerdict: scout.verdict, apiKey, provider, model }),
       })
       if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
       const synthesise = await synthesiseRes.json()

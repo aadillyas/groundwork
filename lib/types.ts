@@ -90,10 +90,14 @@ export interface ProjectScores {
 
 export type AccessTier = 'free' | 'byok' | 'paid'
 
+export type LLMProvider = 'gemini' | 'openrouter' | 'deepseek' | 'ollama'
+
 export interface UsageState {
   analysesUsed: number
   tier: AccessTier
-  geminiKey?: string
+  apiKey?: string
+  provider?: LLMProvider
+  model?: string
   githubToken?: string
 }
 

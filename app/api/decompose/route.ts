@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { callLLM } from '@/lib/llm'
-import { DecomposeResponse, ExistenceVerdict } from '@/lib/types'
+import { DecomposeResponse, ExistenceVerdict, LLMProvider } from '@/lib/types'
 
 export async function POST(req: NextRequest) {
-  const { idea, scoutVerdict, geminiKey }: { idea: string; scoutVerdict?: ExistenceVerdict; geminiKey?: string } = await req.json()
+  const {
+    idea,
+    scoutVerdict,
+    apiKey,
+    provider,
+    model,
+  }: {
+    idea: string
+    scoutVerdict?: ExistenceVerdict
+    apiKey?: string
+    provider?: LLMProvider
+    model?: string
+  } = await req.json()
 
   const prompt = `You are a senior software engineer doing pre-build OSS research. A founder wants to build: "${idea}"
 
@@ -38,7 +50,7 @@ Respond in pure JSON with no markdown fences. Format:
 }`
 
   try {
-    const raw = await callLLM(prompt, geminiKey)
+    const raw = await callLLM(prompt, apiKey, provider, model)
     const parsed: DecomposeResponse = JSON.parse(raw)
     return NextResponse.json(parsed)
   } catch (err) {
