@@ -9,7 +9,7 @@ const STEPS = [
   {
     num: '02',
     title: 'Check what exists',
-    headline: 'Groundwork searches GitHub for the closest building blocks',
+    headline: 'Groundwork searches GitHub so you don\'t have to',
     body: 'It breaks your idea into parts behind the scenes, runs focused searches, and surfaces relevant open-source projects instead of leaving you with a blank search box.',
     accent: 'bg-violet-500',
   },
@@ -35,7 +35,7 @@ export default function FeatureWalkthrough() {
       <div className="text-center mb-14">
         <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-3">How it works</div>
         <h2 className="font-display text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
-          From vague idea to clearer starting point
+          Here&rsquo;s what happens when you paste your idea in
         </h2>
       </div>
 

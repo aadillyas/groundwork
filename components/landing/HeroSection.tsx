@@ -50,26 +50,26 @@ export default function HeroSection({ onSubmit, onDemo, busy, phase, demoTyping,
 
       {/* Eyebrow */}
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 reveal">
-        Pre-build OSS research
+        Free &middot; No sign-up &middot; Results in under 30 seconds
       </span>
 
       {/* Headline */}
       <div className="flex flex-col gap-5 reveal">
         <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-zinc-900 dark:text-zinc-100 leading-[1.05] tracking-tight">
-          Find out what&rsquo;s already been built<br />
-          <span className="text-indigo-500">before you build from scratch.</span>
+          Before you build anything,<br />
+          <span className="text-indigo-500">find out what&rsquo;s already out there.</span>
         </h1>
         <p className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-          Describe your idea in plain English. Groundwork checks GitHub, breaks the idea into parts, and shows you what you can reuse, what you should build yourself, and where to start.
+          Describe your idea in plain English. Groundwork breaks it down, searches GitHub, and tells you what already exists, what you can reuse, and what&rsquo;s actually yours to build.
         </p>
       </div>
 
       {/* Pain points */}
       <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-sm text-zinc-400 dark:text-zinc-600 reveal">
         {[
-          'Stop guessing what already exists',
-          'Skip messy GitHub rabbit holes',
-          'Get a practical starting plan',
+          'Had an idea but weren\'t sure if it exists?',
+          'Opened GitHub and didn\'t know where to start?',
+          'Want to know what to build vs. what to just use?',
         ].map((pain, i, arr) => (
           <span key={pain} className="flex items-center gap-3">
             <span>{pain}</span>

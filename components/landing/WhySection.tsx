@@ -8,7 +8,7 @@ export default function WhySection() {
           <div>
             <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-3">Why Groundwork exists</div>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight">
-              I built this because I kept having ideas and no reliable way to check what already existed.
+              I kept having ideas. And every time, I&rsquo;d spend hours trying to figure out if someone had already built something like it &mdash; and never really got a clear answer.
             </h2>
           </div>
 

@@ -282,7 +282,7 @@ export default function HomePage() {
       <footer className="border-t border-zinc-200 dark:border-zinc-800 px-6 py-10 text-center flex flex-col items-center gap-3">
         <span className="font-display font-bold text-zinc-400 dark:text-zinc-600 tracking-tight">Groundwork</span>
         <p className="text-xs text-zinc-400 dark:text-zinc-600 font-mono">
-          Pre-build OSS research &mdash; built by&nbsp;
+          Find out what exists before you build &mdash; by&nbsp;
           <a href={siteConfig.author.links.website} target="_blank" rel="noopener noreferrer" className="hover:text-zinc-600 dark:hover:text-zinc-400 transition-colors underline underline-offset-2">
             {siteConfig.author.name}
           </a>
