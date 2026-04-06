@@ -12,7 +12,7 @@ import AboutSection from '@/components/landing/AboutSection'
 import PricingSection from '@/components/landing/PricingSection'
 import { AnalysisPhase, AnalysisState } from '@/lib/types'
 import { DEMO_RESULT } from '@/lib/demo'
-import { canRunAnalysis, recordAnalysis, getBYOKKeys, getUsageState } from '@/lib/access'
+import { canRunAnalysis, clearBYOKKeys, recordAnalysis, getBYOKKeys, getUsageState } from '@/lib/access'
 import siteConfig from '@/site.config'
 
 const DEMO_PHASE_DELAYS: { phase: AnalysisPhase; ms: number }[] = [
@@ -39,10 +39,16 @@ export default function HomePage() {
   const [pendingIdea, setPendingIdea] = useState<string | null>(null)
   // True when the free tier has been used today — shows a soft nudge, never blocks
   const [usedFreeTier, setUsedFreeTier] = useState(false)
+  const [activeByok, setActiveByok] = useState<{ provider?: string; model?: string } | null>(null)
 
   useEffect(() => {
     const usage = getUsageState()
     setUsedFreeTier(usage.tier === 'free' && !canRunAnalysis())
+    setActiveByok(
+      usage.tier === 'byok'
+        ? { provider: usage.provider, model: usage.model }
+        : null
+    )
   }, [])
 
   // Scroll reveal observer
@@ -202,11 +208,24 @@ export default function HomePage() {
   }
 
   function handleGateUnlocked() {
+    const usage = getUsageState()
+    setActiveByok(
+      usage.tier === 'byok'
+        ? { provider: usage.provider, model: usage.model }
+        : null
+    )
     setGateOpen(false)
     if (pendingIdea) {
       setPendingIdea(null)
       runAnalysis(pendingIdea)
     }
+  }
+
+  function handleClearByok() {
+    clearBYOKKeys()
+    setActiveByok(null)
+    const usage = getUsageState()
+    setUsedFreeTier(usage.tier === 'free' && !canRunAnalysis())
   }
 
   const isBusy = phase !== 'idle' || demoTyping
@@ -247,6 +266,27 @@ export default function HomePage() {
 
       {/* Hero — owns the input, CTA, progress, and demo */}
       <div className="dot-grid">
+        {activeByok && (
+          <div className="max-w-4xl mx-auto px-6 pt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/20 px-4 py-3">
+              <div className="text-sm text-emerald-800 dark:text-emerald-300">
+                BYOK is active in this browser.
+                {' '}
+                <span className="font-mono text-xs">
+                  {activeByok.provider ?? 'provider'} / {activeByok.model ?? 'model'}
+                </span>
+                {' '}
+                means analysis is currently unlimited here.
+              </div>
+              <button
+                onClick={handleClearByok}
+                className="flex-none px-3 py-2 rounded-lg border border-emerald-300 dark:border-emerald-800 text-sm font-medium text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-950/40 transition-colors"
+              >
+                Clear BYOK and test free mode
+              </button>
+            </div>
+          </div>
+        )}
         <HeroSection
           onSubmit={runAnalysis}
           onDemo={startDemo}
