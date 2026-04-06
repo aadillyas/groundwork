@@ -16,10 +16,10 @@ export default function ScoreShowcase() {
         <div className="px-8 pt-8 pb-6 border-b border-zinc-100 dark:border-zinc-800">
           <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-2">The output</div>
           <h2 className="font-display text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
-            Three numbers that tell you<br />if it&rsquo;s worth building.
+            A quick read on whether your idea is already solved, mostly reusable, or still yours to build.
           </h2>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-3 max-w-lg leading-relaxed">
-            Run your idea through Groundwork and get these scores in 30 seconds. No guesswork, no hours of research — just a clear read on where you stand.
+            These scores are there to help you make a faster decision: how original the idea looks, how much open source can carry the build, and how realistic it is to ship quickly.
           </p>
         </div>
 
@@ -29,9 +29,9 @@ export default function ScoreShowcase() {
 
           <div className="flex flex-col gap-4 max-w-xs">
             {[
-              { label: 'Originality', desc: 'How novel is the idea vs what already exists fully built?' },
-              { label: 'Reliance on OSS', desc: 'How much of the build can you cover with existing repos?' },
-              { label: 'Buildability', desc: 'Overall ease of shipping — combining the two signals above.' },
+              { label: 'Originality', desc: 'How much of the idea feels genuinely new compared with what already seems fully built.' },
+              { label: 'Reliance on OSS', desc: 'How much of the work can probably be covered by existing repos and reusable building blocks.' },
+              { label: 'Buildability', desc: 'A quick sense of how practical this looks to ship once those two signals are combined.' },
             ].map(item => (
               <div key={item.label} className="flex flex-col gap-0.5">
                 <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-600">{item.label}</span>

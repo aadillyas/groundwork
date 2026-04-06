@@ -1,30 +1,30 @@
 const STEPS = [
   {
     num: '01',
-    title: 'Decompose',
-    headline: 'Break your idea into precise components',
-    body: 'Groundwork splits your idea into 4–6 independent technical components. Each gets targeted GitHub search queries — not "pdf extraction", but "pdf table extraction typescript unstructured".',
+    title: 'Describe it',
+    headline: 'Tell Groundwork what you want to build',
+    body: 'Write your idea the way you would explain it to another person. You do not need to know the right technical terms or how to search GitHub properly.',
     accent: 'bg-indigo-500',
   },
   {
     num: '02',
-    title: 'Scan GitHub',
-    headline: 'Systematic search, not just the first result',
-    body: 'Every component is independently searched across GitHub. We run multiple queries per component, deduplicate results, and surface the top repos ranked by stars, recency, and relevance.',
+    title: 'Check what exists',
+    headline: 'Groundwork searches GitHub for the closest building blocks',
+    body: 'It breaks your idea into parts behind the scenes, runs focused searches, and surfaces relevant open-source projects instead of leaving you with a blank search box.',
     accent: 'bg-violet-500',
   },
   {
     num: '03',
-    title: 'Identify what\'s trustworthy',
-    headline: 'Active, maintained, and worth forking',
-    body: 'We filter for repos with recent commits, permissive licences, and meaningful star counts. Abandoned projects get filtered out. You only see repos worth actually building on.',
+    title: 'Separate signal from noise',
+    headline: 'See what looks reusable and what still looks missing',
+    body: 'Groundwork helps you spot which repos look active and worth building on, and which parts of your idea do not seem well covered yet.',
     accent: 'bg-sky-500',
   },
   {
     num: '04',
-    title: 'Synthesise a strategy',
-    headline: 'USE vs BUILD — for every component',
-    body: 'You get a clear verdict per component: USE an existing repo (fork it, integrate it) or BUILD it yourself (your actual IP). Plus three scores that tell you how original the idea is, how much OSS covers it, and how fast you can ship.',
+    title: 'Start smarter',
+    headline: 'Get a practical starting plan',
+    body: 'Instead of a pile of links, you get guidance on what to use, what to combine, what to build yourself, and how feasible the idea looks overall.',
     accent: 'bg-emerald-500',
   },
 ]
@@ -35,7 +35,7 @@ export default function FeatureWalkthrough() {
       <div className="text-center mb-14">
         <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-3">How it works</div>
         <h2 className="font-display text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
-          A systematic process,<br />not a lucky Google search
+          From vague idea to clearer starting point
         </h2>
       </div>
 

@@ -10,7 +10,7 @@ function AnalysisCounter() {
   return (
     <div className="flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-600 font-mono reveal">
       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-      Join 50+ builders who&rsquo;ve already done their groundwork
+      Join 50+ builders who checked what existed before building
     </div>
   )
 }
@@ -56,20 +56,20 @@ export default function HeroSection({ onSubmit, onDemo, busy, phase, demoTyping,
       {/* Headline */}
       <div className="flex flex-col gap-5 reveal">
         <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold text-zinc-900 dark:text-zinc-100 leading-[1.05] tracking-tight">
-          Someone, somewhere,<br />
-          <span className="text-indigo-500">already built part of this.</span>
+          Find out what&rsquo;s already been built<br />
+          <span className="text-indigo-500">before you build from scratch.</span>
         </h1>
         <p className="text-lg sm:text-xl text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-          Before you spend weeks on a foundation, find out what you can fork, what you can wire together, and what&rsquo;s actually left to build.
+          Describe your idea in plain English. Groundwork checks GitHub, breaks the idea into parts, and shows you what you can reuse, what you should build yourself, and where to start.
         </p>
       </div>
 
       {/* Pain points */}
       <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-sm text-zinc-400 dark:text-zinc-600 reveal">
         {[
-          'Decision fatigue is real',
-          'LLM knowledge is stale',
-          'GitHub search is a mess',
+          'Stop guessing what already exists',
+          'Skip messy GitHub rabbit holes',
+          'Get a practical starting plan',
         ].map((pain, i, arr) => (
           <span key={pain} className="flex items-center gap-3">
             <span>{pain}</span>

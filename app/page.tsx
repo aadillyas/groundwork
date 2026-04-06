@@ -23,8 +23,8 @@ const DEMO_PHASE_DELAYS: { phase: AnalysisPhase; ms: number }[] = [
 ]
 
 const NAV_LINKS = [
-  { label: 'How it works', href: '#how-it-works' },
   { label: 'Why I built this', href: '#why' },
+  { label: 'How it works', href: '#how-it-works' },
   { label: 'Pricing', href: '#pricing' },
   { label: 'About', href: '#about' },
 ]
@@ -259,6 +259,9 @@ export default function HomePage() {
         />
       </div>
 
+      {/* Why I built this */}
+      <WhySection />
+
       {/* Feature walkthrough */}
       <div id="how-it-works" className="scroll-mt-16">
         <FeatureWalkthrough />
@@ -266,9 +269,6 @@ export default function HomePage() {
 
       {/* Score showcase */}
       <ScoreShowcase />
-
-      {/* Why I built this */}
-      <WhySection />
 
       {/* Pricing */}
       <PricingSection onTryFree={() => {

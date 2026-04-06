@@ -8,22 +8,22 @@ export default function WhySection() {
           <div>
             <div className="text-xs font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-600 mb-3">Why Groundwork exists</div>
             <h2 className="font-display text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight">
-              Built by a non-tech builder<br />who got tired of flying blind.
+              I built this because I kept having ideas and no reliable way to check what already existed.
             </h2>
           </div>
 
           <div className="flex flex-col gap-4 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
             <p>
-              I&rsquo;m not a software engineer. I&rsquo;m someone who constantly wants to build and ship things — but I know my limits. Every time I had an idea, I&rsquo;d ask an LLM to help me figure out what already exists. The problem? LLMs are opinionated, outdated, and sometimes just wrong about what&rsquo;s out there.
+              I&rsquo;m not a software engineer. I&rsquo;m just someone who likes having ideas and trying to ship them. Every time I got excited about something new, I&rsquo;d ask an LLM what already existed, then immediately wonder if the answer was outdated, incomplete, or just confidently wrong.
             </p>
             <p>
-              So I&rsquo;d go to GitHub. And feel completely lost. I didn&rsquo;t know how to search properly, couldn&rsquo;t tell a maintained repo from an abandoned one, and certainly didn&rsquo;t know when to fork vs when to rebuild. Hours of research for a 10-minute decision.
+              Then I&rsquo;d open GitHub and feel completely lost. I didn&rsquo;t know the right search terms, couldn&rsquo;t tell a healthy repo from a dead one, and had no clear way to decide whether I should fork something, stitch a few tools together, or just build it myself.
             </p>
             <p>
-              After months of building things the hard way, I realised I needed a tool that did this research <em>systematically</em> — not just a search, but a structured breakdown of what exists, what&rsquo;s trustworthy, and what&rsquo;s genuinely missing.
+              That&rsquo;s the gap Groundwork tries to close. You describe the thing you want to build, and it does the messy research step for you in a more systematic way: what exists, what looks trustworthy, and what still seems missing.
             </p>
             <p className="font-medium text-zinc-700 dark:text-zinc-300">
-              And here&rsquo;s the thing I want to be clear about: Groundwork is not about telling you whether to build. Build it anyway — you&rsquo;ll learn more from building than from researching. The point is to build <em>faster</em> and <em>better</em>, standing on what&rsquo;s already been done.
+              If you&rsquo;ve ever had an idea, asked ChatGPT about it, and still felt unsure what was real, this is for you. Groundwork is not here to talk you out of building. It&rsquo;s here to help you start with better footing and waste less time on research.
             </p>
           </div>
         </div>
@@ -38,8 +38,8 @@ export default function WhySection() {
                   <path d="M9 2L11.09 7.26L17 7.64L12.88 11.12L14.18 17L9 13.77L3.82 17L5.12 11.12L1 7.64L6.91 7.26L9 2Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
                 </svg>
               ),
-              label: 'The old way',
-              text: 'Ask an LLM → get confident but outdated answers. Search GitHub → get overwhelmed. Make a guess and hope for the best.',
+              label: 'What usually happens',
+              text: 'You ask an LLM, open ten tabs, skim GitHub for an hour, and still are not sure what is actually reusable versus what only sounds promising.',
               tone: 'border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/20',
             },
             {
@@ -48,8 +48,8 @@ export default function WhySection() {
                   <path d="M3 9L7 13L15 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               ),
-              label: 'The Groundwork way',
-              text: 'Describe your idea → get a structured breakdown of every component → see exactly what exists, what\'s trustworthy, and what you actually need to build.',
+              label: 'What Groundwork does',
+              text: 'It turns that fuzzy research phase into something concrete: describe the idea, see what exists, and get a clearer read on what to use, what to combine, and what to build.',
               tone: 'border-emerald-200 dark:border-emerald-900 bg-emerald-50/50 dark:bg-emerald-950/20',
             },
             {
@@ -59,8 +59,8 @@ export default function WhySection() {
                   <path d="M9 6V9.5L11.5 12" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
                 </svg>
               ),
-              label: 'Build anyway — just faster',
-              text: 'This is not a tool to talk you out of building. It\'s a tool to help you skip the foundation work and get to the parts that are actually yours to create.',
+              label: 'The point',
+              text: 'You should still build the thing. Groundwork just helps you spend less time reinventing foundations and more time on the parts that are actually yours.',
               tone: 'border-indigo-200 dark:border-indigo-900 bg-indigo-50/50 dark:bg-indigo-950/20',
             },
           ].map(card => (
