@@ -7,7 +7,7 @@ const DEFAULT_PROVIDER: LLMProvider = process.env.OPENROUTER_API_KEY ? 'openrout
 const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash'
 // Free model fallback chain — tried in order until one succeeds.
 // Override the primary with OPENROUTER_MODEL env var; the rest are always attempted on 429.
-const DEFAULT_OPENROUTER_MODEL = process.env.OPENROUTER_MODEL ?? 'openrouter/auto'
+const DEFAULT_OPENROUTER_MODEL = process.env.OPENROUTER_MODEL ?? 'deepseek/deepseek-chat-v3-0324'
 const DEFAULT_DEEPSEEK_MODEL = 'deepseek-chat'
 const DEFAULT_OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? 'llama3.1'
 
