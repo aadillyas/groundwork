@@ -68,7 +68,7 @@ export default function PricingSection({ onTryFree }: PricingSectionProps) {
             This isn&rsquo;t a closed platform. Fork the repo, add your own API keys, and run it entirely on your own compute — forever.
           </p>
           <ul className="flex flex-col gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-            {['Unlimited analyses', 'Your Gemini + GitHub keys', 'Keys never leave your machine', 'No subscription'].map(f => (
+            {['Unlimited analyses', 'Your own API keys', 'Keys never leave your machine', 'No subscription'].map(f => (
               <li key={f} className="flex items-center gap-2"><CheckIcon />{f}</li>
             ))}
           </ul>

@@ -153,7 +153,7 @@ export default function HeroSection({ onSubmit, onDemo, busy, phase, demoTyping,
 
           {!busy && (
             <p className="text-xs text-zinc-400 dark:text-zinc-600 font-mono">
-              Uses GitHub search + Gemini 2.5 Flash &middot; 1 free analysis per day
+              Uses GitHub search + routed LLM &middot; 1 free analysis per day
             </p>
           )}
         </div>
