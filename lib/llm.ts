@@ -5,7 +5,7 @@ import { LLMProvider } from '@/lib/types'
 // This avoids exhausting a 25 req/day personal Gemini quota when serving public traffic.
 const DEFAULT_PROVIDER: LLMProvider = process.env.OPENROUTER_API_KEY ? 'openrouter' : 'gemini'
 const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash'
-const DEFAULT_OPENROUTER_MODEL = process.env.OPENROUTER_MODEL ?? 'openrouter/auto'
+const DEFAULT_OPENROUTER_MODEL = process.env.OPENROUTER_MODEL ?? 'meta-llama/llama-3.3-70b-instruct:free'
 const DEFAULT_DEEPSEEK_MODEL = 'deepseek-chat'
 const DEFAULT_OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? 'llama3.1'
 
