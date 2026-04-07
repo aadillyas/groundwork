@@ -109,6 +109,7 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idea, apiKey, provider, model, githubToken }),
       })
+      if (scoutRes.status === 429) throw new Error('RATE_LIMITED')
       if (!scoutRes.ok) throw new Error('Failed to scout for existing solutions')
       const scout = await scoutRes.json()
       state.scout = scout
@@ -143,6 +144,7 @@ export default function HomePage() {
             model,
           }),
         })
+        if (synthesiseRes.status === 429) throw new Error('RATE_LIMITED')
         if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
         state.synthesise = await synthesiseRes.json()
 
@@ -160,6 +162,7 @@ export default function HomePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idea, normalizedIdea: scout.normalizedIdea, scoutVerdict: scout.verdict, apiKey, provider, model }),
       })
+      if (decomposeRes.status === 429) throw new Error('RATE_LIMITED')
       if (!decomposeRes.ok) throw new Error('Failed to decompose idea')
       const decompose = await decomposeRes.json()
       state.decompose = decompose
@@ -193,6 +196,7 @@ export default function HomePage() {
           model,
         }),
       })
+      if (synthesiseRes.status === 429) throw new Error('RATE_LIMITED')
       if (!synthesiseRes.ok) throw new Error('Failed to synthesise results')
       const synthesise = await synthesiseRes.json()
       state.synthesise = synthesise
@@ -203,7 +207,13 @@ export default function HomePage() {
       router.push('/analyse')
     } catch (err: any) {
       setPhase('idle')
-      setError(err.message ?? 'Something went wrong')
+      if (err.message === 'RATE_LIMITED') {
+        setError("Groundwork's free capacity is currently full. Resets in a few hours — or paste your own API key to run unlimited analyses now.")
+        setPendingIdea(idea)
+        setGateOpen(true)
+      } else {
+        setError(err.message ?? 'Something went wrong')
+      }
     }
   }
 

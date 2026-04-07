@@ -223,6 +223,9 @@ Do not change verdicts, recommended repos, or action choices.`
       }
     })
   } catch (err) {
+    if (err instanceof Error && err.message === 'RATE_LIMITED') {
+      return NextResponse.json({ error: 'RATE_LIMITED' }, { status: 429 })
+    }
     console.error('synthesise explanation error:', err)
     warnings.push(createWarning('synthesise_explanation_fallback', 'Used deterministic fallback copy because the explanation model response could not be parsed.'))
   }

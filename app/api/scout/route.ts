@@ -77,7 +77,10 @@ Return pure JSON with no markdown fences:
 
     const raw = await callLLM(prompt, apiKey, provider, model)
     normalizedIdea = sanitizeNormalizedIdea(idea, safeJsonParse<{ normalizedIdea?: Partial<NormalizedIdea> }>(raw).normalizedIdea)
-  } catch {
+  } catch (err) {
+    if (err instanceof Error && err.message === 'RATE_LIMITED') {
+      return NextResponse.json({ error: 'RATE_LIMITED' }, { status: 429 })
+    }
     normalizedIdea = sanitizeNormalizedIdea(idea, undefined)
     warnings.push(createWarning('normalization_fallback', 'Used fallback idea normalization because the model response could not be parsed.'))
   }
@@ -108,7 +111,10 @@ Respond in pure JSON:
 
     const raw = await callLLM(summaryPrompt, apiKey, provider, model)
     summary = safeJsonParse<{ summary?: string }>(raw).summary?.trim() || summary
-  } catch {
+  } catch (err) {
+    if (err instanceof Error && err.message === 'RATE_LIMITED') {
+      return NextResponse.json({ error: 'RATE_LIMITED' }, { status: 429 })
+    }
     warnings.push(createWarning('scout_summary_fallback', 'Used fallback scout summary because the explanation model response could not be parsed.'))
   }
 

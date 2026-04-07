@@ -117,6 +117,9 @@ Return pure JSON:
 
     return NextResponse.json(response)
   } catch (err) {
+    if (err instanceof Error && err.message === 'RATE_LIMITED') {
+      return NextResponse.json({ error: 'RATE_LIMITED' }, { status: 429 })
+    }
     console.error('decompose error:', err)
     return NextResponse.json({ error: 'Failed to decompose idea' }, { status: 500 })
   }

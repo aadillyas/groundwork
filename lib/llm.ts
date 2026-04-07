@@ -1,9 +1,11 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { LLMProvider } from '@/lib/types'
 
-const DEFAULT_PROVIDER: LLMProvider = 'gemini'
+// Default to OpenRouter (free tier) if key is present, otherwise fall back to Gemini.
+// This avoids exhausting a 25 req/day personal Gemini quota when serving public traffic.
+const DEFAULT_PROVIDER: LLMProvider = process.env.OPENROUTER_API_KEY ? 'openrouter' : 'gemini'
 const DEFAULT_GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash'
-const DEFAULT_OPENROUTER_MODEL = 'google/gemini-2.5-flash'
+const DEFAULT_OPENROUTER_MODEL = process.env.OPENROUTER_MODEL ?? 'deepseek/deepseek-chat-v3-0324:free'
 const DEFAULT_DEEPSEEK_MODEL = 'deepseek-chat'
 const DEFAULT_OLLAMA_MODEL = process.env.OLLAMA_MODEL ?? 'llama3.1'
 
@@ -39,8 +41,16 @@ async function callGemini(prompt: string, apiKey?: string, model?: string): Prom
   }
 
   const genAI = new GoogleGenerativeAI(key)
-  const result = await genAI.getGenerativeModel({ model: resolveModel('gemini', model) }).generateContent(prompt)
-  return sanitiseResponseText(result.response.text())
+  try {
+    const result = await genAI.getGenerativeModel({ model: resolveModel('gemini', model) }).generateContent(prompt)
+    return sanitiseResponseText(result.response.text())
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    if (msg.includes('429') || msg.includes('quota') || msg.toLowerCase().includes('resource_exhausted')) {
+      throw new Error('RATE_LIMITED')
+    }
+    throw err
+  }
 }
 
 async function callOpenAICompatible(
@@ -50,9 +60,13 @@ async function callOpenAICompatible(
   endpoint: string,
   provider: 'openrouter' | 'deepseek'
 ): Promise<string> {
-  if (!apiKey) {
+  const key = provider === 'openrouter'
+    ? (apiKey ?? process.env.OPENROUTER_API_KEY)
+    : apiKey
+  if (!key) {
     throw new Error(`Missing ${provider} API key`)
   }
+  apiKey = key
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -76,6 +90,9 @@ async function callOpenAICompatible(
 
   if (!res.ok) {
     const text = await res.text()
+    if (res.status === 429) {
+      throw new Error('RATE_LIMITED')
+    }
     throw new Error(`${provider} request failed: ${res.status} ${text}`)
   }
 
